@@ -1,0 +1,53 @@
+<div class="launches-grid-container">
+    <h2>Rocket Launches</h2>
+    
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading launches...</p>
+    </div>
+    
+    <div *ngIf="error" class="error-container">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>Failed to load launches. Please try again later.</p>
+      <button mat-raised-button color="primary" (click)="loadLaunches()">Retry</button>
+    </div>
+    
+    <div *ngIf="!loading && !error && filteredLaunches.length === 0" class="empty-container">
+      <mat-icon>search_off</mat-icon>
+      <p>No launches found matching your filters.</p>
+    </div>
+    
+    <div *ngIf="!loading && !error && filteredLaunches.length > 0" class="launches-grid">
+      <div *ngFor="let launch of filteredLaunches" class="launch-card" (click)="selectLaunch(launch)">
+        <div class="launch-header">
+          <h3>{{ launch.mission_name }}</h3>
+          <span class="badge" [ngClass]="launch.launch_success ? 'badge-success' : 'badge-error'">
+            {{ launch.launch_success ? 'Success' : 'Failed' }}
+          </span>
+        </div>
+        
+        <div class="launch-info">
+          <div class="info-row">
+            <span class="info-label">Date:</span>
+            <span>{{ getFormattedDate(launch.launch_date_utc) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Rocket:</span>
+            <span>{{ launch.rocket.rocket_name }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Flight #:</span>
+            <span>{{ launch.flight_number }}</span>
+          </div>
+        </div>
+        
+        <div class="launch-description" *ngIf="launch.details">
+          {{ launch.details | slice:0:100 }}{{ launch.details.length > 100 ? '...' : '' }}
+        </div>
+        
+        <div class="launch-actions">
+          <button mat-stroked-button color="primary">View Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
