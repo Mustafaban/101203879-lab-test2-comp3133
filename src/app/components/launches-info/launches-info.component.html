@@ -1,0 +1,142 @@
+<div class="launch-info-container">
+    <div class="back-button">
+      <button mat-stroked-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Back to Launches
+      </button>
+    </div>
+    
+    <div class="launch-header">
+      <div class="launch-title">
+        <h2>{{ launch.mission_name }}</h2>
+        <span class="badge" [ngClass]="launch.launch_success ? 'badge-success' : 'badge-error'">
+          {{ launch.launch_success ? 'Successful' : 'Failed' }}
+        </span>
+      </div>
+      
+      <div class="launch-patch" *ngIf="launch.links.mission_patch_small">
+        <img [src]="launch.links.mission_patch_small" [alt]="launch.mission_name + ' patch'">
+      </div>
+    </div>
+    
+    <div class="launch-card">
+      <h3>Launch Details</h3>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Flight Number:</span>
+          <span>{{ launch.flight_number }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Launch Date:</span>
+          <span>{{ getFormattedDate(launch.launch_date_utc) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Launch Year:</span>
+          <span>{{ launch.launch_year }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Launch Site:</span>
+          <span>{{ launch.launch_site.site_name_long }}</span>
+        </div>
+      </div>
+      
+      <mat-divider class="divider"></mat-divider>
+      
+      <div class="launch-description" *ngIf="launch.details">
+        <h3>Description</h3>
+        <p>{{ launch.details }}</p>
+      </div>
+      <div class="launch-description" *ngIf="!launch.details">
+        <h3>Description</h3>
+        <p class="no-data">No detailed description available for this launch.</p>
+      </div>
+    </div>
+    
+    <div class="launch-card">
+      <h3>Rocket Information</h3>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Rocket Name:</span>
+          <span>{{ launch.rocket.rocket_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Rocket Type:</span>
+          <span>{{ launch.rocket.rocket_type }}</span>
+        </div>
+      </div>
+      
+      <mat-divider class="divider"></mat-divider>
+      
+      <h4>First Stage</h4>
+      <div *ngFor="let core of launch.rocket.first_stage.cores; let i = index" class="core-info">
+        <h5>Core #{{ i + 1 }}</h5>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Serial:</span>
+            <span>{{ core.core_serial || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Reused:</span>
+            <span>{{ core.reused ? 'Yes' : 'No' }}</span>
+          </div>
+          <div class="info-item" *ngIf="core.landing_intent">
+            <span class="info-label">Landing:</span>
+            <span [ngClass]="core.land_success ? 'text-success' : 'text-error'">
+              {{ core.land_success ? 'Successful' : 'Failed' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <mat-divider class="divider"></mat-divider>
+      
+      <h4>Payloads</h4>
+      <div *ngFor="let payload of launch.rocket.second_stage.payloads; let i = index" class="payload-info">
+        <h5>{{ payload.payload_id }}</h5>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Type:</span>
+            <span>{{ payload.payload_type }}</span>
+          </div>
+          <div class="info-item" *ngIf="payload.payload_mass_kg">
+            <span class="info-label">Mass:</span>
+            <span>{{ payload.payload_mass_kg }} kg</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Orbit:</span>
+            <span>{{ payload.orbit || 'N/A' }}</span>
+          </div>
+          <div class="info-item" *ngIf="payload.customers && payload.customers.length > 0">
+            <span class="info-label">Customers:</span>
+            <span>{{ payload.customers.join(', ') }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="launch-card">
+      <h3>Media & Links</h3>
+      
+      <div class="links-container">
+        <a mat-raised-button color="primary" *ngIf="launch.links.article_link" [href]="launch.links.article_link" target="_blank">
+          <mat-icon>article</mat-icon> Article
+        </a>
+        <a mat-raised-button color="primary" *ngIf="launch.links.video_link" [href]="launch.links.video_link" target="_blank">
+          <mat-icon>videocam</mat-icon> Video
+        </a>
+        <a mat-raised-button color="primary" *ngIf="launch.links.wikipedia" [href]="launch.links.wikipedia" target="_blank">
+          <mat-icon>language</mat-icon> Wikipedia
+        </a>
+      </div>
+      
+      <div class="images-container" *ngIf="launch.links.flickr_images && launch.links.flickr_images.length > 0">
+        <h4>Images</h4>
+        <div class="images-grid">
+          <div *ngFor="let image of launch.links.flickr_images" class="image-item">
+            <img [src]="image" [alt]="launch.mission_name">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
