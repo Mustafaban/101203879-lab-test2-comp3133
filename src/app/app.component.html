@@ -1,0 +1,28 @@
+<div class="app-container">
+  <div class="app-header">
+    <h1>{{ title }}</h1>
+    <p class="subtitle">Explore rocket launches from SpaceX</p>
+  </div>
+  
+  <div class="content-container">
+    <div *ngIf="!selectedLaunch" class="launches-view">
+      <app-launch-filter-bar (filterChange)="onFilterChange($event)"></app-launch-filter-bar>
+      <app-launches-grid 
+        [filterYear]="filterYear" 
+        [filterSuccess]="filterSuccess"
+        (launchSelected)="onLaunchSelected($event)">
+      </app-launches-grid>
+    </div>
+    
+    <div *ngIf="selectedLaunch" class="launch-detail-view">
+      <app-launch-info 
+        [launch]="selectedLaunch"
+        (backToList)="onBackToList()">
+      </app-launch-info>
+    </div>
+  </div>
+  
+  <div class="app-footer">
+    <p>Mustafa Bandukda</p>
+  </div>
+</div>
